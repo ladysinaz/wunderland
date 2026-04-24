@@ -359,7 +359,8 @@ function renderPath(){
 
 function cInfo(idx,c,sel,jk,nk,done,isPull,isRev){
   const interp=isRev?c.r:c.u;
-  const prompts=sel?c.j[sel]:null;
+ const prompts=sel?c.j[sel]:null;
+  const jkd=jk+'_'+(sel||'g');
   return`<div class="ci">
   <div class="cih"><div class="cn">${NM[idx]} — Major Arcana${isRev?' · Reversed':''}</div><div class="cnm">${c.n}</div><div class="cst">${c.s}</div><div class="kws">${c.k.map(k=>`<span class="kw">${k}</span>`).join('')}</div></div>
   <div class="cib">
@@ -380,7 +381,7 @@ function cInfo(idx,c,sel,jk,nk,done,isPull,isRev){
       <button class="pb${sel==='q'?' on':''}" onclick="setSel('q','${isPull?'d':'p'}')">⟳ Curious</button>
       <button class="pb${sel==='d'?' on':''}" onclick="setSel('d','${isPull?'d':'p'}')">⬧ Deep</button>
     </div>
-    ${prompts?`<div class="pd"><ul>${prompts.map(p=>`<li>${p}</li>`).join('')}</ul></div><textarea class="ja" placeholder="Write your reflections here… there is no right way." onchange="svJ('${jk}',this.value,false)">${S.journals[jk]||''}</textarea>`:''}
+    ${prompts?`<div class="pd"><ul>${prompts.map(p=>`<li>${p}</li>`).join('')}</ul></div><textarea class="ja" placeholder="Write your reflections here… there is no right way." onchange="svJ('${jkd}',this.value,false)">${S.journals[jkd]||''}</textarea>`:''}
     <div class="igs">
       <button class="itb${S.showInteg?' op':''}" onclick="${isPull?'tigP':'tig'}()"><span class="ar">▸</span> Integration Experiments</button>
       ${S.showInteg?`<p style="font-size:14px;color:var(--td);font-style:italic;margin-bottom:12px">These are experiments, not tasks.</p><div class="ibd"><ul>${c.i.map(x=>`<li>${x}</li>`).join('')}</ul></div><textarea class="in" placeholder="Notes from your experiments…" onchange="svJ('${nk}',this.value,true)">${S.integNotes[nk]||''}</textarea>`:''}
@@ -401,7 +402,7 @@ function tigP(){S.showInteg=!S.showInteg;renderPull();}
 function setSel(p,mode){S.selPrompt=S.selPrompt===p?null:p;if(mode==='p')renderPath();else renderPull();}
 function markDone(i){if(!S.completed.includes(i))S.completed.push(i);save();toast('✦ Card complete — well done.');renderPath();}
 function svJ(k,v,isN){if(isN)S.integNotes[k]=v;else S.journals[k]=v;save();}
-function confirmReset(){if(confirm('This will clear all path progress and completed cards.\n\nYour journal entries will be kept.\n\nAre you sure you want to start the path again?')){S.completed=[];S.pathIndex=0;S.isFlipped=false;S.selPrompt=null;S.showInteg=false;save();toast('✦ The path has been reset. The lantern awaits.');renderPath();}}
+function confirmReset(){if(confirm('This will clear all path progress and completed cards.\n\nYour journal entries for all depths (Gentle, Curious, Deep) will be kept.\n\nAre you sure you want to start the path again?')){S.completed=[];S.pathIndex=0;S.isFlipped=false;S.selPrompt=null;S.showInteg=false;save();toast('✦ The path has been reset. The lantern awaits.');renderPath();}}
 
 function renderPull(){
   const c=S.curCard!==null?CD[S.curCard]:null,sel=S.selPrompt,pr=S.pullRev;
@@ -443,7 +444,7 @@ function printC(idx,isRev){
   <h3>When Avoided</h3><div class="l"><ul>${c.l.a.map(x=>`<li>${x}</li>`).join('')}</ul><p style="font-style:italic;margin-top:6px;color:#8a6830">${c.l.an}</p></div>
   <h3>Common Confusions</h3><div class="l"><ul>${c.l.c.map(x=>`<li>${x}</li>`).join('')}</ul><p style="font-style:italic;margin-top:6px;color:#8a6830">${c.l.cn}</p></div>
   ${pr?`<h3>Journaling Prompts — ${sel}</h3><ul>${pr.map(p=>`<li>${p}</li>`).join('')}</ul>`:''}
-  <h3>Journal Entry</h3><div class="box">${S.journals[jk]||'(no entry)'}</div>
+  <h3>Journal Entry — Gentle</h3><div class="box">${S.journals[jk+'_g']||'(no entry)'}</div>   <h3>Journal Entry — Curious</h3><div class="box">${S.journals[jk+'_q']||'(no entry)'}</div>   <h3>Journal Entry — Deep</h3><div class="box">${S.journals[jk+'_d']||'(no entry)'}</div>
   <h3>Integration</h3><ul>${c.i.map(x=>`<li>${x}</li>`).join('')}</ul>
   <h3>Integration Notes</h3><div class="box">${S.integNotes[nk]||'(no notes)'}</div>
   <div class="ft">Wunderland Shadows · ${c.n} · ${new Date().toLocaleDateString()}</div>
