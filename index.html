@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wunderland Shadows</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#d4aa50;--gl:#f0cc78;--gd:#8a6830;
+  --bg:#100b05;--sf:#1e1308;--cd:#271a08;
+  --br:#4a3310;--tc:#f5edd8;--tm:#b89660;--td:#6a5030;
+  --tl:#1ab8c8;--tld:#0d7080;--tlk:#082830;
+  --tlg:rgba(26,184,200,0.15);
+}
+body{background:var(--bg);color:var(--tc);font-family:'Cormorant Garamond',Georgia,serif;min-height:100vh;overflow-x:hidden;cursor:none;font-size:18px}
+#cur{position:fixed;width:14px;height:14px;border-radius:50%;background:var(--gl);pointer-events:none;z-index:9999;transform:translate(-50%,-50%);box-shadow:0 0 8px 3px rgba(212,170,80,.7)}
+.sp{position:fixed;pointer-events:none;z-index:9998;border-radius:50%;animation:sf .9s forwards}
+@keyframes sf{0%{opacity:1;transform:scale(1) translate(0,0)}100%{opacity:0;transform:scale(0) translate(var(--dx),var(--dy))}}
+#app{max-width:980px;margin:0 auto;padding:20px;min-height:100vh}
+.hdr{text-align:center;padding:30px 0 20px;border-bottom:1px solid var(--br);margin-bottom:28px;position:relative}
+.htl{font-family:'Cinzel',serif;font-size:clamp(26px,5vw,46px);color:var(--gold);letter-spacing:5px;text-shadow:0 0 40px rgba(212,170,80,.35);margin-bottom:6px}
+.hsb{font-size:15px;color:var(--tm);letter-spacing:4px;font-style:italic}
+.cor{position:absolute;color:var(--gd);font-size:20px;opacity:.7}
+.cor.tl{top:14px;left:14px}.cor.tr{top:14px;right:14px}
+.nav{display:flex;justify-content:center;margin-bottom:28px;border:1px solid var(--br);border-radius:4px;overflow:hidden;max-width:460px;margin-left:auto;margin-right:auto}
+.nt{flex:1;padding:13px 18px;background:var(--sf);color:var(--tm);border:none;cursor:pointer;font-family:'Cinzel',serif;font-size:12px;letter-spacing:2px;transition:all .3s;border-right:1px solid var(--br)}
+.nt:last-child{border-right:none}
+.nt.on{background:var(--cd);color:var(--gold);box-shadow:inset 0 -2px 0 var(--tl)}
+.nt:hover:not(.on){background:var(--cd);color:var(--tc)}
+.btn{padding:12px 24px;border:1px solid var(--gd);background:transparent;color:var(--gold);font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:all .3s;white-space:nowrap}
+.btn:hover{background:rgba(212,170,80,.12);border-color:var(--gold);box-shadow:0 0 14px rgba(212,170,80,.2)}
+.btn.pr{background:rgba(212,170,80,.18);border-color:var(--gold)}
+.btn.sm{padding:8px 16px;font-size:10px}
+.btn.mu{color:var(--tm);border-color:var(--br)}
+.btn.mu:hover{color:var(--tc);border-color:var(--tm)}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:10px 0}
+.tgr{display:flex;align-items:center;gap:10px;font-size:15px;color:var(--tm)}
+.tg{position:relative;width:38px;height:20px}
+.tg input{opacity:0;width:0;height:0}
+.sl{position:absolute;inset:0;background:var(--br);border-radius:20px;cursor:pointer;transition:.3s}
+.sl::before{content:'';position:absolute;width:14px;height:14px;left:3px;top:3px;background:var(--td);border-radius:50%;transition:.3s}
+input:checked+.sl{background:var(--gd)}
+input:checked+.sl::before{transform:translateX(16px);background:var(--gold)}
+.lts{display:flex;flex-direction:column;align-items:center;gap:16px;padding:24px 18px;background:var(--sf);border:1px solid var(--br);border-radius:6px;margin-bottom:24px}
+.ltl{font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;color:var(--tm)}
+.ltc{font-family:'Cinzel',serif;font-size:12px;color:var(--gold)}
+.lta{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;max-width:420px}
+.csl label{display:block;font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;color:var(--tld);margin-bottom:6px;text-align:center}
+.csl{width:100%}
+select.cs{width:100%;padding:13px 16px;background:var(--cd);border:1px solid var(--br);border-radius:4px;color:var(--tc);font-family:'Cormorant Garamond',serif;font-size:16px;cursor:pointer;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a6830' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;transition:border-color .3s}
+select.cs:focus{border-color:var(--tld)}
+.rsb{background:none;border:1px solid var(--br);color:var(--td);font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;padding:7px 14px;border-radius:2px;cursor:pointer;transition:all .3s}
+.rsb:hover{border-color:var(--tm);color:var(--tm)}
+.cco{position:relative;width:min(290px,85vw);perspective:1200px;cursor:pointer;margin:0 auto}
+.cci{width:100%;transition:transform .9s cubic-bezier(.4,0,.2,1);transform-style:preserve-3d;position:relative;aspect-ratio:5/9}
+.cci.fl{transform:rotateY(180deg)}
+.cci.rv{transform:rotateY(180deg) rotateZ(180deg)}
+.cf,.cb{width:100%;height:100%;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:10px;overflow:hidden;border:2px solid var(--gd);box-shadow:0 10px 40px rgba(0,0,0,.85),0 0 20px rgba(212,170,80,.1);position:absolute;top:0;left:0;background:var(--bg)}
+.cb{z-index:2}
+.cf{transform:rotateY(180deg)}
+.cf img,.cb img{width:100%;height:100%;object-fit:cover;display:block}
+.ifb{width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;background:var(--cd)}
+.ifb span{font-family:'Cinzel',serif;font-size:12px;color:var(--gd);letter-spacing:2px;text-align:center;padding:0 16px}
+.fh{position:absolute;bottom:0;left:0;right:0;background:rgba(16,11,5,.88);border-top:1px solid var(--gd);padding:10px;text-align:center;font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;color:var(--gold);z-index:10;border-radius:0 0 10px 10px;animation:ph 2s ease-in-out infinite}
+@keyframes ph{0%,100%{opacity:.7}50%{opacity:1}}
+.ob{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--cd);border:1px solid var(--gd);padding:4px 14px;border-radius:20px;font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;color:var(--gold);white-space:nowrap;z-index:20}
+.ci{width:100%;max-width:680px;background:var(--sf);border:1px solid var(--br);border-radius:6px;overflow:hidden;margin-top:8px}
+.cih{padding:24px 28px 18px;border-bottom:1px solid var(--br);border-top:2px solid var(--tlk);background:var(--cd);text-align:center}
+.cn{font-family:'Cinzel',serif;font-size:11px;color:var(--tm);letter-spacing:4px;margin-bottom:5px}
+.cnm{font-family:'Cinzel',serif;font-size:28px;color:var(--gold);letter-spacing:3px;margin-bottom:5px}
+.cst{font-size:15px;color:var(--tm);font-style:italic}
+.kws{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+.kw{font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:#40c8d8;padding:3px 10px;border:1px solid var(--tlk);border-radius:20px}
+.cib{padding:22px 28px}
+.sl2{font-family:'Cinzel',serif;font-size:10px;letter-spacing:4px;color:var(--tld);margin-bottom:9px;display:block;text-transform:uppercase}
+.wp{font-size:19px;color:var(--tc);font-style:italic;line-height:1.7;padding:16px 22px;border-left:2px solid var(--tld);margin-bottom:22px;background:linear-gradient(90deg,rgba(13,112,128,.12),transparent)}
+.it{font-size:16px;color:var(--tc);line-height:1.9;margin-bottom:22px}
+.lb{margin-bottom:16px;padding:14px 18px;background:var(--cd);border-left:2px solid var(--tlk);border-radius:0 4px 4px 0}
+.lt{font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;color:var(--tld);margin-bottom:8px;text-transform:uppercase}
+.lbd{font-size:14px;color:var(--tm);line-height:1.9}
+.lbd ul{list-style:none;padding:0}
+.lbd li{padding:2px 0 2px 16px;position:relative}
+.lbd li::before{content:'·';position:absolute;left:0;color:var(--gd)}
+.ln{font-size:13px;color:var(--td);font-style:italic;margin-top:6px}
+.od{text-align:center;color:var(--tld);font-size:12px;letter-spacing:8px;padding:12px 0;opacity:.7}
+.ps{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.pb{flex:1;min-width:100px;padding:11px 8px;border:1px solid var(--br);background:var(--cd);color:var(--tm);font-family:'Cinzel',serif;font-size:10px;letter-spacing:1px;cursor:pointer;border-radius:2px;transition:all .3s;text-align:center}
+.pb:hover,.pb.on{border-color:var(--tld);color:#40d8e8;background:rgba(26,184,200,.1);box-shadow:0 0 8px var(--tlg)}
+.pd{background:var(--cd);border:1px solid var(--br);border-radius:4px;padding:18px 22px;margin-bottom:16px}
+.pd ul{list-style:none;padding:0}
+.pd li{font-size:15px;color:var(--tc);line-height:1.9;padding:4px 0 4px 18px;position:relative}
+.pd li::before{content:'·';position:absolute;left:0;color:var(--gd)}
+.ja{width:100%;min-height:150px;background:var(--bg);border:1px solid var(--br);border-radius:4px;padding:16px;color:var(--tc);font-family:'Cormorant Garamond',serif;font-size:16px;line-height:1.9;resize:vertical;outline:none;transition:border-color .3s}
+.ja:focus{border-color:var(--tld)}
+.ja::placeholder{color:var(--td)}
+.igs{margin-top:18px}
+.itb{background:none;border:none;color:var(--tm);font-family:'Cormorant Garamond',serif;font-size:15px;cursor:pointer;padding:0;display:flex;align-items:center;gap:7px;margin-bottom:12px;transition:color .3s}
+.itb:hover{color:var(--gold)}
+.itb .ar{transition:transform .3s;font-size:11px}
+.itb.op .ar{transform:rotate(90deg)}
+.ibd{background:var(--bg);border:1px solid var(--br);border-left:2px solid var(--tlk);border-radius:0 4px 4px 0;padding:16px 20px;margin-bottom:12px}
+.ibd ul{list-style:none;padding:0}
+.ibd li{font-size:15px;color:var(--tm);line-height:1.9;padding:4px 0 4px 18px;position:relative}
+.ibd li::before{content:'◇';position:absolute;left:0;color:var(--gd);font-size:10px;top:7px}
+.in{width:100%;min-height:90px;background:var(--bg);border:1px solid var(--br);border-radius:4px;padding:14px;color:var(--tc);font-family:'Cormorant Garamond',serif;font-size:15px;line-height:1.9;resize:vertical;outline:none;transition:border-color .3s}
+.in:focus{border-color:var(--tld)}
+.in::placeholder{color:var(--td)}
+.ar2{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;padding-top:18px;border-top:1px solid var(--br)}
+.ca{display:flex;flex-direction:column;align-items:center;gap:24px}
+.es{text-align:center;padding:50px 20px}
+.es .bi{font-size:42px;margin-bottom:16px;color:var(--gd)}
+.es p{font-size:16px;line-height:1.9;color:var(--tm)}
+.tst{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:var(--cd);border:1px solid var(--gd);padding:12px 26px;border-radius:4px;font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;color:var(--gold);z-index:1000;opacity:0;transition:opacity .4s;pointer-events:none}
+.tst.sh{opacity:1}
+.hsc{text-align:center;padding:30px 0}
+.htg{font-size:19px;color:var(--tc);font-style:italic;line-height:1.8;max-width:540px;margin:0 auto 30px}
+.htg em{color:var(--gold)}
+.mc{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:540px;margin:0 auto}
+.mci{padding:28px 22px;background:var(--sf);border:1px solid var(--br);border-radius:6px;cursor:pointer;transition:all .3s;text-align:center}
+.mci:hover{border-color:var(--tld);background:var(--cd);box-shadow:0 0 22px var(--tlg)}
+.mii{font-size:30px;margin-bottom:12px;color:var(--gd)}
+.mtt{font-family:'Cinzel',serif;font-size:15px;color:var(--gold);letter-spacing:2px;margin-bottom:8px}
+.mds{font-size:14px;color:var(--tm);line-height:1.7}
+.ft{margin-top:50px;border-top:1px solid var(--br);padding:36px 18px 28px;text-align:center}
+.ftg{background:none;border:none;color:var(--tm);font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;margin-bottom:18px;transition:color .3s}
+.ftg:hover{color:var(--gold)}
+.ftc{display:none;text-align:left;max-width:660px;margin:0 auto}
+.ftc.op{display:block}
+.fts{margin-bottom:24px;padding:18px 22px;background:var(--sf);border:1px solid var(--br);border-radius:4px}
+.fts h3{font-family:'Cinzel',serif;font-size:12px;letter-spacing:3px;color:var(--gd);margin-bottom:10px}
+.fts p,.fts li{font-size:14px;color:var(--tm);line-height:1.9}
+.fts ul{list-style:none;padding:0}
+.fts li{padding:2px 0 2px 16px;position:relative}
+.fts li::before{content:'·';position:absolute;left:0;color:var(--gd)}
+.ftr{font-size:12px;color:var(--td);margin-top:18px;letter-spacing:2px;font-style:italic}
+#rtp{position:fixed;bottom:26px;right:26px;width:42px;height:42px;border-radius:50%;background:var(--cd);border:1px solid var(--tld);color:var(--tl);font-size:17px;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:500;transition:all .3s;box-shadow:0 0 10px var(--tlg)}
+#rtp:hover{background:rgba(26,184,200,.15);border-color:var(--tl)}
+#rtp.vs{display:flex}
+@media(max-width:640px){
+  body{font-size:16px}
+  .mc{grid-template-columns:1fr}
+  .cco{width:min(250px,80vw)}
+  .cib{padding:14px 16px}
+  .cih{padding:18px 14px 14px}
+  .cnm{font-size:22px}
+  .wp{font-size:16px;padding:12px 14px}
+  .it{font-size:15px}
+  .ps{gap:5px}
+  .pb{padding:9px 5px;font-size:9px;min-width:70px}
+  .ar2{flex-direction:column}
+  .ar2 .btn{width:100%;text-align:center}
+  .ctl{gap:7px}
+  .btn{padding:10px 12px;font-size:10px}
+  .lts{padding:18px 12px}
+  .nt{padding:11px 8px;font-size:10px;letter-spacing:1px}
+  #rtp{bottom:14px;right:14px;width:36px;height:36px;font-size:14px}
+}
+@media(hover:none){#cur{display:none}body{cursor:auto}}
+@media print{
+  body{background:#fff;color:#222}
+  #cur,.sp,.nav,.ctl,.ar2,.hsc,.ps,.itb,.btn,.ft,.lts,#rtp{display:none!important}
+  .ci{border:1px solid #ccc}.cco{display:none}.ja,.in{border:1px solid #ccc;min-height:80px}
+}
+</style>
+</head>
+<body>
+<div id="cur"></div>
+<div id="tst" class="tst"></div>
+<button id="rtp" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<div id="app">
+  <header class="hdr">
+    <span class="cor tl">✦</span><span class="cor tr">✦</span>
+    <div class="htl">Wunderland Shadows</div>
+    <div class="hsb">Enter Wunderland · Meet Your Shadow · Come Back</div>
+  </header>
+  <nav class="nav">
+    <button class="nt on" onclick="showScreen('home')">Home</button>
+    <button class="nt" onclick="showScreen('path')">The Path</button>
+    <button class="nt" onclick="showScreen('pull')">Draw a Card</button>
+  </nav>
+  <div id="sh"></div><div id="sp" style="display:none"></div><div id="sd" style="display:none"></div>
+
+  <!-- COMMUNITY BANNER -->
+  <div style="margin-top:36px;padding:26px 22px;background:linear-gradient(135deg,rgba(13,112,128,.2),rgba(26,184,200,.08),rgba(39,26,8,.6));border:1px solid var(--tld);border-radius:6px;text-align:center;position:relative;overflow:hidden">
+    <div style="position:absolute;top:0;left:0;right:0;bottom:0;opacity:.04;background:repeating-linear-gradient(45deg,var(--tl) 0,var(--tl) 1px,transparent 1px,transparent 12px)"></div>
+    <div style="position:relative;z-index:1">
+      <div style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:4px;color:var(--tld);margin-bottom:8px">✦ CONTINUE THE JOURNEY ✦</div>
+      <p style="font-family:'Cinzel',serif;font-size:18px;color:var(--gold);letter-spacing:2px;margin-bottom:8px">Join the Wunderland Shadows Community</p>
+      <p style="font-size:15px;color:var(--tm);line-height:1.8;max-width:460px;margin:0 auto 18px;font-style:italic">Go deeper into shadow work, connect with fellow travellers, and access the full Wunderland experience.</p>
+      <a href="https://www.skool.com/wunderland-magicks-3192/about" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:13px 32px;border:1px solid var(--tl);background:rgba(26,184,200,.15);color:#40e8f8;font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;border-radius:2px;text-decoration:none" onmouseover="this.style.background='rgba(26,184,200,.28)'" onmouseout="this.style.background='rgba(26,184,200,.15)'">Enter the Community ✦</a>
+    </div>
+  </div>
+
+  <footer class="ft">
+    <button class="ftg" onclick="document.getElementById('ftc').classList.toggle('op')">🫖 Wunderland Shadows — Legal & Information ▾</button>
+    <div class="ftc" id="ftc">
+      <div class="fts"><h3>🔮 Disclaimer</h3><p>Wunderland Shadows provides tarot-based tools for self-reflection and personal insight for educational and introspective purposes only. We do not provide medical, psychological, legal, or financial advice. Nothing shared should be used as a substitute for professional care.</p></div>
+      <div class="fts"><h3>🧠 Mental Health Notice</h3><p>This space may explore themes related to personal growth, trauma awareness, and emotional processing. This is not therapy. If you are experiencing distress or crisis, please seek help from a qualified professional or local support service.</p></div>
+      <div class="fts"><h3>🪞 Interpretation Clause</h3><p>All tarot interpretations are subjective and symbolic — offered as reflective tools, not facts, predictions, or guarantees of outcomes.</p></div>
+      <div class="fts"><h3>🔐 Privacy Policy</h3><ul><li>We only collect information necessary to provide access to our community, courses, and products</li><li>Your information will never be sold or shared without consent, except where required by law</li><li>Payment information is processed securely through third-party providers</li><li>You are responsible for maintaining the confidentiality of your account access</li></ul></div>
+      <div class="fts"><h3>📜 Terms & Conditions</h3><p><strong style="color:var(--tc)">Digital Products:</strong> For personal use only. May not be copied, shared, resold, or redistributed.<br><strong style="color:var(--tc)">No Guarantees:</strong> We make no guarantees regarding personal outcomes or results.<br><strong style="color:var(--tc)">Payments & Refunds:</strong> All sales are final unless otherwise stated.<br><strong style="color:var(--tc)">Intellectual Property:</strong> All content is the property of Wunderland Shadows and may not be used without permission.</p></div>
+      <div class="fts"><h3>⚖️ Limitation of Liability</h3><p>Wunderland Shadows and its creators are not liable for any decisions, actions, or outcomes resulting from the use of our content, community, or services.</p></div>
+      <div class="fts"><h3>🫧 Final Note</h3><p>This space is designed as a mirror — not a directive. You are always the authority over your own life.</p></div>
+      <div class="ftr">✦ Wunderland Shadows · All Rights Reserved ✦</div>
+    </div>
+  </footer>
+</div>
+
+<script>
+const BACK='https://i.imgur.com/4lBKW6D.jpg';
+const IDS=['EyxvNUV','q5MBY88','ANDJdJ3','1xlSd7b','6iFvZTS','bxjyLlg','GYIyX1j','QMPyzQr','mQdd3Uv','iazVmIU','qG5UD5e','Xo8UrCn','LiSC25O','mBHfaL1','TyyugQe','TVrkiCY','9WBhXrO','NC29Hl2','6ifkQY5','PsDvrUO','J1meSII','xvX8klo'];
+function iSrc(i){return`https://i.imgur.com/${IDS[i]}.jpg`;}
+function iFB(el,i){if(el.dataset.t==='1'){el.style.display='none';const fb=el.parentElement.querySelector('.ifb');if(fb)fb.style.display='flex';return;}el.dataset.t='1';el.src=`https://i.imgur.com/${IDS[i]}.jpeg`;}
+function bFB(el){if(el.dataset.t==='1'){el.style.display='none';return;}el.dataset.t='1';el.src='https://i.imgur.com/4lBKW6D.jpeg';}
+const NM=['0','I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX','XXI'];
+
+const CD=[
+  {n:'The Pawn',s:'The Beginning Without a Map',k:['Potential','Curiosity','First Movement','Openness'],w:'Notice where you are willing to move without knowing the outcome.',o:'Approach with curiosity and willingness.',u:{t:'Potential · Curiosity · First Movement · Openness',x:'The Pawn stands at the edge of the board, aware only of the next square. There is no grand strategy yet — only the willingness to move. Like Alice stepping onto the chessboard without knowing the rules, the Pawn advances not from certainty, but from curiosity. The path reveals itself only after the step is taken. This card marks the beginning of an inner journey where certainty is not required. You are allowed to not know. You are allowed to learn by stepping forward. In shadow work, The Pawn appears when awareness is emerging. You may not yet see the system you\'re inside — but you are no longer frozen within it. This is the first honest move.'},r:{t:'Overexposure · Disorientation · Premature Risk',x:'Reversed, The Pawn suggests movement without containment. Too many steps taken too quickly, without support or orientation. Like Alice suddenly growing too large or too small, the Pawn has moved before understanding its own limits. This may reflect impulsivity, dissociation disguised as freedom, or a sense of being pushed forward before safety is established. The medicine here is not retreat, but pacing. Slowing down allows the board to come into view.'},l:{p:['There may be a sense of openness without direction','Curiosity can exist alongside uncertainty','Action may feel possible even without confidence'],pn:'This state often carries movement without a plan.',a:['Waiting for certainty before starting','Hesitation framed as "being responsible"','A need for guarantees, permission, or readiness'],an:'Avoidance here is often protective, not resistant.',c:['Beginning vs. impulsivity','Openness vs. naïveté','Not knowing vs. being unprepared'],cn:'The Pawn is not reckless — it simply hasn\'t been told what to fear yet.'},j:{g:['What does "beginning" feel like in my body today?','Where do I already move without a map?'],q:['What do I usually require before I allow myself to start?','How do I treat myself when I don\'t know what I\'m doing yet?'],d:['When did not knowing become unsafe for me?','Who benefited when I learned to hesitate?']},i:['Notice one place this week where you already act without full clarity','Experiment with beginning something badly or incompletely','If urgency appears, pause and ask: "Is speed required here?"']},
+  {n:'The Conductor',s:'Will, Direction, and Influence',k:['Agency','Focus','Direction','Intent'],w:'Notice how attention organizes what follows.',o:'Directed Will.',u:{t:'Agency · Focus · Direction · Intent',x:'The Conductor appears when awareness begins to organize itself. This card marks the moment you realize you have tools — attention, choice, timing, and intention. Like the White Rabbit, this energy is quick, intelligent, and alert to cause and effect. In shadow work, this card signals emerging agency. You are beginning to influence your inner world rather than only respond to it.'},r:{t:'Manipulation · Misdirection · Anxious Control',x:'Reversed, The Conductor warns of agency driven by fear rather than presence. Action becomes compulsive. Tools are used to control outcomes rather than engage with them. The invitation here is to slow the mind and reconnect intention with integrity. Power without grounding becomes illusion.'},l:{p:['Direction may feel intentional, even if outcomes are uncertain','Effort is applied toward coordination rather than control','Movement happens with awareness of timing and pacing'],pn:'The Conductor works with existing motion, not against it.',a:['Action stalls while waiting for perfect clarity','Will feels dangerous or associated with harm','Influence is disowned or projected onto others'],an:'Avoidance here may protect against past overreach.',c:['Direction vs. force','Influence vs. manipulation','Will vs. pressure'],cn:'The Conductor guides energy; it does not create it.'},j:{g:['Where do I already influence outcomes without trying?','What currently feels in motion in my life?'],q:['How do I relate to wanting something?','When does intention feel supportive rather than demanding?'],d:['When did my will feel unsafe or unwelcome?','What happened when I expressed direction in the past?']},i:['Notice moments when direction emerges naturally','Experiment with allowing momentum without steering it','If urgency appears, pause and ask: "Who is pushing?"']},
+  {n:'The Witness',s:'Seeing Without Intervening',k:['Intuition','Inner Authority','Subtle Awareness','Receptivity'],w:'Notice what is present before you try to understand it.',o:'Awareness alone is enough.',u:{t:'Intuition · Inner Authority · Subtle Awareness · Receptivity',x:'The Witness appears when attention turns inward — not to act, but to notice. Reflected in the Caterpillar: unhurried, observant, uninterested in proving anything. In shadow work, The Witness arises when intuition begins to feel more reliable than external input. You may not yet have language for what you know — but you are learning to trust the signal beneath the noise.'},r:{t:'Disconnection · Inner Static · Distrust of Self',x:'Reversed, The Witness suggests interference in perception. Signals blur. Intuition feels distant or overridden. Like Alice questioning herself after too many changes, you may be outsourcing inner authority. The medicine is gentleness. Intuition returns when pressure is removed.'},l:{p:['Attention may feel steady or spacious','Thoughts and sensations can be noticed without urgency','There may be a sense of distance that feels clear rather than numb'],pn:'Witnessing often brings choice — not answers.',a:['Observation collapses into judgment or analysis','Silence feels threatening rather than neutral','Awareness is quickly redirected into action or distraction'],an:'Avoiding witnessing is often a form of self-protection.',c:['Witnessing vs. dissociation','Witnessing vs. emotional suppression','Witnessing vs. detachment or superiority'],cn:'The Witness is not above experience — it remains with it.'},j:{g:['What do I notice before I decide what something means?','Where in my body does observation feel easiest today?'],q:['When does noticing turn into self-criticism for me?','What kinds of experiences feel hardest to witness without fixing?'],d:['When did being seen become unsafe?','What did I learn about silence growing up?']},i:['Practice stopping at description ("I notice…") without interpretation','Notice moments when awareness shifts into urgency','If witnessing feels cold or distant, place a hand on your body and pause']},
+  {n:'The Garden',s:'Growth Without Control',k:['Nurture','Embodiment','Growth','Relational Safety'],w:'Notice where care is already present — and where it is being withheld.',o:'What is tended responds.',u:{t:'Nurture · Embodiment · Growth · Relational Safety',x:'The Garden appears when the inner environment becomes fertile. In Wunderland, the garden is not ruled, but tended. Growth happens naturally when conditions are right. Nothing is rushed. In shadow work, The Garden signals a return to the body as a safe place to inhabit. This card reminds you that healing does not only happen through insight — it happens through care.'},r:{t:'Neglect · Over-giving · Conditional Care',x:'Reversed, The Garden points to disruption in nourishment. Care may be withheld, misdirected, or given at the expense of the self. The invitation is to examine where care has become transactional. Nourishment must include you.'},l:{p:['There may be a sense of allowance rather than effort','Care can feel responsive instead of strategic','Growth may happen unevenly, without urgency'],pn:'The Garden grows by support, not force.',a:['Care becomes conditional or transactional','Growth feels dangerous, exposed, or demanding','Nourishment is delayed until worthiness is proven'],an:'Withholding care is often a survival strategy.',c:['Nourishment vs. indulgence','Growth vs. pressure to expand','Care vs. obligation'],cn:'The Garden does not require productivity.'},j:{g:['What feels quietly supportive in my life right now?','Where do I already receive care without effort?'],q:['What conditions do I require before allowing myself nourishment?','How do I respond to environments that offer care freely?'],d:['When did growth become something I had to earn?','What happened when my needs were visible?']},i:['Notice one form of nourishment you accept without justification','Experiment with leaving something uncultivated or unfinished','If guilt arises around rest or care, pause without correcting it']},
+  {n:'The Queen',s:'Order, Authority, and Control',k:['Structure','Order','Protection','Authority'],w:'Notice how rules shape your sense of safety.',o:'Control reveals what it fears.',u:{t:'Structure · Order · Protection · Authority',x:'The Queen appears when the inner world seeks stability through structure. Through the Queen of Hearts, authority is absolute and immediate. In shadow work, The Queen reflects internalized authority: the rules you live by, the voices that say what is allowed. Not all rules are harmful — some create the stability needed for growth.'},r:{t:'Rigidity · Domination · Fear-Based Control',x:'Reversed, The Queen reveals authority that has lost its protective function. Structure becomes punishment. The Queen of Hearts shouts orders not to protect — but to prevent chaos at any cost. Examine which rules still serve safety, and which are remnants of survival that now limit freedom.'},l:{p:['Structure may feel stabilizing or clarifying','Decisions can feel decisive, even if imperfect','Boundaries are enforced rather than negotiated'],pn:'Order here can create predictability.',a:['Authority is outsourced or resisted reflexively','Structure feels threatening or oppressive','Rules are followed rigidly to avoid punishment'],an:'Avoidance may reflect past misuse of power.',c:['Authority vs. safety','Control vs. leadership','Structure vs. rigidity'],cn:'The Queen governs outcomes, not feelings.'},j:{g:['Where does structure currently support me?','What boundaries feel clear in my life right now?'],q:['How do I respond to authority — internal or external?','When does control feel protective rather than restrictive?'],d:['What happened when power was misused around me?','What did I learn about obedience or defiance?']},i:['Notice where rules bring relief rather than constraint','Experiment with naming one boundary without enforcing it','If control tightens, pause and locate it in the body']},
+  {n:'The Storyteller',s:'Holding Stories, Not Truths',k:['Tradition','Teaching','Shared Meaning','Belonging'],w:'Notice whose voice gives meaning to what you believe.',o:'Meaning is inherited before it is chosen.',u:{t:'Tradition · Teaching · Shared Meaning · Belonging',x:'The Storyteller appears when personal experience seeks meaning through shared language. Through the Mad Hatter, The Storyteller becomes the keeper of narrative — sometimes nonsensical, sometimes profound. In shadow work, this card points to inherited frameworks: family rules, cultural values, spiritual beliefs, and the stories you were told about yourself.'},r:{t:'Dogma · Indoctrination · Meaning Without Choice',x:'Reversed, The Storyteller reveals when teachings have hardened into unquestioned truth. The Mad Hatter keeps the tea party going, even when no one remembers why. The work here is discernment: choosing which stories to carry forward, and which to gently set down.'},l:{p:['Meaning is organized through narrative','Guidance comes from shared language or tradition','Structure offers reassurance or orientation'],pn:'The Storyteller gives context, not certainty.',a:['Teachings feel imposed or constraining','Authority of tradition is rejected outright','Meaning-making feels suspect or dangerous'],an:'Avoidance may reflect times when stories were used to control.',c:['Meaning vs. truth','Teaching vs. indoctrination','Structure vs. rigidity'],cn:'The Storyteller transmits stories — not all stories are neutral.'},j:{g:['What stories have shaped how I understand the world?','Where do I still lean on inherited explanations?'],q:['How do I decide which teachings to trust?','What stories feel supportive — and which feel limiting?'],d:['When was I taught something that conflicted with my experience?','What happened when I questioned a story I was given?']},i:['Notice one story you tell yourself automatically','Experiment with holding a teaching lightly rather than rejecting it','If confusion arises, orient to direct experience']},
+  {n:'The Choice',s:'Consent, Relation, and Open Possibility',k:['Union','Alignment','Choice','Reflection'],w:'Notice where you are being asked to choose alignment over comfort.',o:'Desire clarifies through choice.',u:{t:'Union · Alignment · Choice · Reflection',x:'The Choice marks the moment where duality becomes visible — two paths, two desires, two truths held at once. In Wunderland, this is Tweedle Dee and Tweedle Dum: identical in form, opposite in stance. In shadow work, The Choice arises when inner parts seek integration. Union is not fate — it is a decision made with awareness.'},r:{t:'Disconnection · Avoidance · Split Values',x:'Reversed, The Choice suggests fragmentation. Choice is deferred or avoided. Tweedle Dee and Tweedle Dum bicker endlessly, stuck in circular conflict. This may show up as people-pleasing, self-betrayal, or staying in dynamics that no longer align with truth.'},l:{p:['Multiple options can be sensed at once','Desire does not immediately require action','Connection exists without obligation'],pn:'Choice here feels available, not urgent.',a:['Decisions feel predetermined or pressured','Saying yes or no carries imagined consequences','Choice is postponed to preserve safety or attachment'],an:'Avoidance may reflect times when choosing led to loss.',c:['Choice vs. certainty','Consent vs. commitment','Desire vs. obligation'],cn:'The Choice does not promise ease — it offers room.'},j:{g:['Where do I sense more than one option right now?','What feels like a quiet yes, a quiet no, or a maybe?'],q:['How do I usually experience having options?','What helps me notice choice before it narrows?'],d:['When did choosing become risky for me?','What happened when my consent was ignored or overridden?']},i:['Notice one moment where you could choose, even if you don\'t','Experiment with naming a preference internally without acting','If pressure arises, pause and locate it in the body']},
+  {n:'Knights Align',s:'Direction, Tension, and Opposing Forces',k:['Drive','Direction','Containment','Will'],w:'Observe what is driving you forward — and what you are holding together to move.',o:'Direction emerges when force is aligned.',u:{t:'Drive · Direction · Containment · Will',x:'The Knights appear when opposing forces must be carried forward together. The Red Knight and the White Knight ride in awkward balance — they lurch, tilt, and nearly fall. Yet they advance. In shadow work, The Knights reflects the capacity to stay present while emotions pull in different directions. You are learning to move while holding complexity.'},r:{t:'Scattered Effort · Loss of Control · Emotional Overwhelm',x:'Reversed, The Knights suggest momentum without containment. The reins slip. Progress stalls not from lack of desire, but from lack of coordination. This may show up as burnout, emotional flooding, or pushing forward while ignoring internal limits.'},l:{p:['Opposing impulses can be held simultaneously','Movement continues even without full agreement','Direction emerges through balance rather than force'],pn:'Alignment here is dynamic, not fixed.',a:['One force dominates while others are suppressed','Movement stalls due to fear of choosing wrong','Energy is spent managing conflict rather than moving'],an:'Avoidance may reflect times when tension led to harm.',c:['Alignment vs. certainty','Direction vs. speed','Balance vs. compromise'],cn:'Knights Align does not eliminate opposition — it works with it.'},j:{g:['Where do I feel pulled in more than one direction right now?','What tension feels most present in my body today?'],q:['How do I usually respond to inner conflict?','What happens when I try to resolve tension too quickly?'],d:['When was choosing sides costly for me?','What parts of me learned not to pull together?']},i:['Notice moments when you move forward despite mixed signals','Experiment with naming tension without resolving it','If pressure to decide appears, pause and locate it physically']},
+  {n:'Gentle Mastery',s:'Gentleness, Capacity, and Containment',k:['Compassion','Inner Strength','Presence','Calm Influence'],w:'Notice what softens when force is no longer required.',o:'Power softens when it is met.',u:{t:'Compassion · Inner Strength · Presence · Calm Influence',x:'Gentle Mastery appears when power no longer needs to prove itself. In Wunderland, this is Alice with the Lion-like Beast — not restraining it, not fleeing, but staying present. Her steadiness soothes what force never could. In shadow work, Gentle Mastery marks a moment of emotional regulation. True strength here is responsiveness, not resistance.'},r:{t:'Suppression · Reactivity · Self-Doubt',x:'Reversed, Gentle Mastery suggests a disconnection from inner power. Force replaces attunement. This may show up as harsh self-talk, fear of vulnerability, or collapsing when faced with pressure. The work is not to "be stronger," but to reconnect with compassion. Strength returns when gentleness is allowed.'},l:{p:['Intensity can be met without escalation','Boundaries feel firm without aggression','Care and steadiness coexist'],pn:'Gentle Mastery here looks like staying, not overpowering.',a:['Control tightens in the presence of intensity','Withdrawal replaces engagement','Effort is expended to appear composed'],an:'Avoidance may reflect learned survival, not weakness.',c:['Strength vs. endurance','Gentleness vs. passivity','Capacity vs. compliance'],cn:'Gentle Mastery does not require silence.'},j:{g:['Where do I already have enough capacity today?','What feels steady in me right now?'],q:['How do I respond when something feels intense but manageable?','What helps me stay present without forcing calm?'],d:['When was my capacity exceeded?','What did I learn about being "strong" growing up?']},i:['Notice moments when gentleness prevents escalation','Experiment with stopping before effort increases','If overwhelm appears, orient to something neutral and nearby']},
+  {n:'The Lantern Guide',s:'Solitude, Guidance, and Inner Light',k:['Solitude','Integration','Inner Guidance','Discernment'],w:'Notice what reveals itself when you stop moving forward.',o:'What remains is seen when distraction falls away.',u:{t:'Solitude · Integration · Inner Guidance · Discernment',x:'The Lantern Guide appears when outer motion pauses and attention turns inward to integrate. The Lantern Guide walks alone, holding a soft light that illuminates only the next few steps. In shadow work, this card marks a phase of digestion: experiences, choices, and emotions are being processed beneath the surface. Wisdom grows in the quiet where the nervous system can settle.'},r:{t:'Isolation · Avoidance · Disconnection',x:'Reversed, The Lantern Guide suggests withdrawal that has tipped into isolation. Reflection becomes rumination. Solitude feels heavy rather than nourishing. The light is still there — but it\'s being held too close, blinding rather than guiding.'},l:{p:['Attention turns inward without collapsing','Guidance feels quiet rather than directive','The next step becomes visible without revealing the whole path'],pn:'The lantern illuminates just enough.',a:['Solitude feels threatening or empty','Guidance is sought exclusively from external sources','Stillness triggers restlessness or anxiety'],an:'Avoidance may reflect times when being alone was not safe.',c:['Solitude vs. isolation','Guidance vs. certainty','Inner listening vs. rumination'],cn:'The Lantern Guide does not promise clarity — only orientation.'},j:{g:['Where do I already listen inwardly without effort?','What kind of quiet feels tolerable today?'],q:['How do I usually respond to not knowing the whole way forward?','When do I trust guidance that isn\'t urgent or loud?'],d:['When was I alone without support?','What did I learn about self-reliance from that time?']},i:['Notice moments when you already know the next small step','Experiment with pausing before asking for advice','If solitude feels heavy, orient to something external and steady']},
+  {n:'The Turning Game',s:'Change, Chance, and Momentum',k:['Cycles','Change','Movement','Unseen Forces'],w:'Notice what is moving, even when you are not.',o:'Change moves whether it is noticed or not.',u:{t:'Cycles · Change · Movement · Unseen Forces',x:'The Turning Game appears when motion resumes through inevitability. In Wunderland, The Turning Game is part of the endless Tea Party — a game no one remembers starting and no one can stop. In shadow work, this card marks moments when personal control gives way to systemic movement: timing, chance, and forces outside conscious influence.'},r:{t:'Resistance · Stagnation · Fighting the Cycle',x:'Reversed, The Turning Game suggests friction with change. Attempts are made to freeze a moment, cling to control, or insist the game should stop. The work here is acceptance without passivity: recognizing what cannot be controlled, while staying responsive within what can.'},l:{p:['Movement may feel inevitable rather than chosen','Patterns repeat with slight variation','Control loosens without collapse'],pn:'Change here has momentum, not intention.',a:['Rigidity increases in response to uncertainty','Change is framed as threat rather than movement','Effort is spent trying to predict outcomes'],an:'Avoidance may reflect times when change brought harm.',c:['Change vs. chaos','Chance vs. meaning','Momentum vs. loss of agency'],cn:'The Turning Game does not erase choice — it contextualizes it.'},j:{g:['Where do I notice cycles repeating in my life?','What feels in motion right now, even subtly?'],q:['How do I usually respond when outcomes feel uncertain?','What do I try to control when things start to turn?'],d:['When did unpredictability become dangerous for me?','What helped me survive times of rapid change?']},i:['Notice one situation that is already changing without your input','Experiment with not intervening immediately','If anxiety rises, orient to something stable and present']},
+  {n:'The Court',s:'Being Seen, Judgment, and Social Reality',k:['Truth','Accountability','Balance','Clarity'],w:'Notice what becomes clear when everything is brought into the open.',o:'Everything leaves a trace.',u:{t:'Truth · Accountability · Balance · Clarity',x:'The Court appears when actions and outcomes are brought into relationship. In Wunderland, The Court unfolds as The Trial — a public accounting where words, deeds, and intentions are examined. The court may be absurd, but the exposure is real. Upright, The Court asks for honesty with oneself first. Clarity emerges not through punishment, but through alignment.'},r:{t:'Avoidance · Bias · Self-Deception',x:'Reversed, The Court suggests truth is bent to preserve comfort, or responsibility is displaced onto others. In the Wunderland court, verdicts are rushed, rules shift mid-sentence. The work here is recalibration: slowing down, removing bias, and allowing truth to be seen without defense.'},l:{p:['Awareness of others\' perceptions increases','Actions feel consequential or visible','Behaviour may shift in response to being observed'],pn:'The Court makes context unavoidable.',a:['Judgment is internalized and self-directed','Visibility is avoided to maintain safety','Authority is rejected or over-complied with'],an:'Avoidance may reflect times when being seen carried risk.',c:['Judgment vs. punishment','Accountability vs. shame','Being seen vs. being known'],cn:'The Court observes — it does not necessarily condemn.'},j:{g:['Where do I feel observed right now?','What situations make me more self-aware?'],q:['How do I usually respond to evaluation or feedback?','What helps me stay present when I\'m being seen?'],d:['When did visibility become unsafe for me?','What judgments did I learn to anticipate?']},i:['Notice one moment of visibility without self-correction','Experiment with letting judgment exist without rebuttal','If activation arises, orient to something grounding nearby']},
+  {n:'The Pause',s:'Stillness, Suspension, and Re-orientation',k:['Suspension','Surrender','New Perspective','Stillness'],w:'Notice what changes when you stop trying to move forward.',o:'Meaning shifts when movement stops.',u:{t:'Suspension · Surrender · New Perspective · Stillness',x:'The Pause appears when forward momentum halts — not as failure, but as interruption. In Wunderland, Alice finds herself inverted, waiting, unable to proceed as before. In shadow work, this card signals a necessary suspension of action so deeper understanding can emerge. Insight arrives not through effort, but through allowing the nervous system to settle.'},r:{t:'Resistance · Stagnation · Avoidance of Surrender',x:'Reversed, The Pause suggests refusal to pause. Stillness is resisted, even when movement is no longer possible. This may show up as impatience, restlessness, or forcing decisions before clarity has formed. Perspective cannot shift while the body is still fighting the pause.'},l:{p:['Movement slows or stops without collapse','Perspective may shift unexpectedly','Familiar reference points lose importance'],pn:'The pause creates space, not answers.',a:['Stillness is filled quickly with activity','Waiting feels intolerable or unsafe','Value is attached only to forward motion'],an:'Avoidance may reflect times when stopping carried risk.',c:['Pause vs. stagnation','Stillness vs. avoidance','Suspension vs. giving up'],cn:'The Pause is not an ending — it is a change in orientation.'},j:{g:['Where am I already paused, even briefly?','What feels temporarily on hold in my life?'],q:['How do I usually respond when progress slows?','What meaning do I assign to waiting?'],d:['When was stopping not allowed for me?','What happened when momentum was taken away?']},i:['Notice moments when nothing is required of you','Experiment with not filling a pause immediately','If discomfort arises, orient to something steady and nearby']},
+  {n:'End of Form',s:'Release, Loss, and Irreversibility',k:['Endings','Release','Transformation','Transition'],w:'Notice what is already finished.',o:'What dissolves makes space.',u:{t:'Endings · Release · Transformation · Transition',x:'End of Form appears when something has completed its cycle and can no longer be sustained. In Wunderland, the scene dissolves — characters vanish, settings shift, and nothing returns exactly as it was. Alice does not argue with the ending; she is simply carried into what comes next. In shadow work, this card marks a necessary letting go. Grief may be present, but so is relief.'},r:{t:'Resistance · Lingering · Fear of Letting Go',x:'Reversed, End of Form suggests an ending that is being postponed. The form has already collapsed internally, but attachment keeps it in place. This may show up as clinging to old narratives or fearing the unknown that comes after release.'},l:{p:['Something has already ended, internally or externally','Forward movement is altered permanently','Grief may appear — or may not'],pn:'The end marks finality, not failure.',a:['Endings are reframed as transitions prematurely','Loss is intellectualized or minimized','Attention moves quickly toward "what\'s next"'],an:'Avoidance may protect against overwhelm.',c:['Ending vs. punishment','Loss vs. weakness','Finality vs. hopelessness'],cn:'End of Form does not require optimism.'},j:{g:['What feels finished in my life right now?','Where do I sense something has already ended?'],q:['How do I usually respond when things cannot be fixed?','What do I reach for when faced with irreversibility?'],d:['When did loss reshape my life?','What was taken that I never got back?']},i:['Notice one ending without reframing it','Experiment with allowing sadness or neutrality without explanation','If intensity rises, orient to something concrete and present']},
+  {n:'The Alchemist',s:'Integration, Mixing, and Regulation',k:['Integration','Balance','Alchemy','Regulation'],w:'Notice how opposites are learning to exist together.',o:'Opposites learn through contact.',u:{t:'Integration · Balance · Alchemy · Regulation',x:'The Alchemist appears when opposites begin to coexist without conflict. Here, meaning is made through careful mixture — like a table where impossible pairings are served side by side. In shadow work, this card signals nervous-system regulation. Extremes soften. Healing becomes a rhythm rather than a breakthrough. Integration cannot be rushed.'},r:{t:'Imbalance · Fragmentation · Rushing Healing',x:'Reversed, The Alchemist suggests that integration is being forced or bypassed. You may be trying to "move on" too quickly. This can show up as emotional volatility, spiritual bypassing, or pressure to feel better before you\'re ready. True balance comes from inclusion, not correction.'},l:{p:['Different states can exist without conflict','Regulation happens gradually rather than instantly','Extremes soften through contact, not effort'],pn:'The Alchemist works through pace, not perfection.',a:['Parts are kept rigidly separate','Mixing feels threatening or destabilizing','Regulation is demanded rather than supported'],an:'Avoidance may reflect times when blending led to harm.',c:['Integration vs. erasure','Balance vs. numbness','Regulation vs. control'],cn:'The Alchemist does not eliminate difference.'},j:{g:['Where do different parts of me coexist already?','What feels partially integrated today?'],q:['How do I respond when emotions overlap?','What helps me tolerate mixed states?'],d:['When was I expected to "be over it" too soon?','What parts of me were not allowed to mix?']},i:['Notice moments of partial regulation','Experiment with slowing transitions between states','If blending feels overwhelming, pause and orient outward']},
+  {n:'The Trap',s:'Compulsion, Narrowed Choice, and the Cost of Relief',k:['Attachment','Compulsion','Conditioning','Shadow Contracts'],w:'Notice who benefits from my obedience.',o:'Attachment tightens when unseen.',u:{t:'Attachment · Compulsion · Conditioning · Shadow Contracts',x:'The Trap appears when patterns feel fixed and choice feels constrained. In Wunderland logic, rules are arbitrary yet absolute. The Trap reflects the unspoken contract: the moment when participation becomes compulsory, and the illusion of "no alternative" takes hold. The trap exists because it once served a purpose.'},r:{t:'Awakening · Disruption · Exiting the Trap',x:'Reversed, The Trap marks the moment the trap is recognized. The rules begin to look arbitrary. Like realizing the Queen\'s authority depends entirely on compliance, this card reflects the instant when power is revealed as performative. The work here is not rebellion, but recognition.'},l:{p:['Choice feels narrowed or repetitive','Relief and discomfort coexist','There is urgency to return to the same behavior, thought, or dynamic'],pn:'The trap often provides something necessary, even when it costs something else.',a:['Compulsion is reframed as preference or necessity','Control tightens around urges','Shame replaces curiosity'],an:'Avoidance may protect against judgment or exposure.',c:['Compulsion vs. desire','Relief vs. safety','Being trapped vs. being weak'],cn:'The Trap is not about morality — it\'s about cost.'},j:{g:['Where do I notice repetition right now?','What feels hard to step away from, even briefly?'],q:['What does this trap offer me?','What problem does it temporarily solve?'],d:['When did relief become something I had to pay for?','What happened when I tried to leave a trap in the past?']},i:['Notice one moment of pull without acting or suppressing','Experiment with naming the trap internally, without judgment','If shame arises, orient to something neutral and present']},
+  {n:'The Crumbling',s:'Collapse, Shock, and Disruption',k:['Collapse','Revelation','Forced Change','Truth Exposed'],w:'Notice what cannot be held together anymore.',o:'What cannot adapt begins to fail.',u:{t:'Collapse · Revelation · Forced Change · Truth Exposed',x:'The Crumbling appears when a structure can no longer sustain what it was built to contain. Like the Queen\'s castle cracking beneath her own decree, authority loses its footing and certainty shatters. In shadow work, The Crumbling marks moments when survival strategies fail. Beliefs fracture. It clears what was never stable to begin with.'},r:{t:'Delayed Collapse · Avoidance · Internalized Shock',x:'Reversed, The Crumbling suggests a crumbling that is being resisted or postponed. The structure is unstable, but the collapse has turned inward — held in the body as tension, anxiety, or dread. The castle still stands, but only because no one is willing to look too closely at the fractures.'},l:{p:['Change happens faster than choice','Systems fail abruptly or visibly','Shock may precede emotion'],pn:'The break interrupts continuity, not worth.',a:['Damage is minimized or denied','Stability is clung to despite cracks','Disruption is reframed too quickly'],an:'Avoidance may protect against overwhelm.',c:['Collapse vs. failure','Disruption vs. punishment','Shock vs. insight'],cn:'The Crumbling does not announce improvement.'},j:{g:['What feels unstable or disrupted right now?','Where do I notice cracks forming?'],q:['How do I usually respond when things fall apart suddenly?','What helps me orient after shock?'],d:['When did something important collapse for me?','What happened immediately afterward?']},i:['Notice one small thing that remains intact','Experiment with slowing down after disruption','If activation rises, orient to the present environment']},
+  {n:'Quiet Renewal',s:'Hope, Orientation, and Gentle Re-emergence',k:['Hope','Renewal','Trust','Gentle Continuity'],w:'Notice what remains gentle and alive.',o:'Relief arrives without demand.',u:{t:'Hope · Renewal · Trust · Gentle Continuity',x:'Quiet Renewal appears when the worst has passed and the nervous system begins to settle. After the collapse, Wunderland does not vanish — it softens. What remains is a quieter landscape: a reflective pool, a clearing sky, a sense that the world is still holding you. In shadow work, this card marks the return of safety — not certainty, but enough stability to breathe again.'},r:{t:'Faint Hope · Disconnection · Difficulty Trusting the Future',x:'Reversed, Quiet Renewal suggests hope feels distant or inaccessible. The landscape still bears the marks of upheaval. Even the quiet feels uncertain. This is not failure — it is tenderness. After upheaval, trust rebuilds slowly. The light hasn\'t gone out; it\'s just harder to see.'},l:{p:['Something steady becomes perceptible','Relief may arrive quietly rather than dramatically','Attention shifts toward what can continue'],pn:'Quiet Renewal offers direction, not certainty.',a:['Hope is dismissed as naïve or dangerous','Expectation of disappointment dominates','Relief feels undeserved or temporary'],an:'Avoidance may reflect times when hope led to harm.',c:['Hope vs. optimism','Orientation vs. certainty','Gentleness vs. passivity'],cn:'Quiet Renewal does not promise safety — it offers reference.'},j:{g:['What feels quietly supportive right now?','Where do I notice steadiness, even briefly?'],q:['How do I usually respond when relief appears?','What conditions help me trust small comforts?'],d:['When did hope feel risky for me?','What helped me keep going when things were unclear?']},i:['Notice one small thing that offers continuity','Experiment with letting relief be brief and sufficient','If suspicion arises, acknowledge it without correcting']},
+  {n:'The Dark Forest',s:'Uncertainty, Distortion, and Inner Landscape',k:['Uncertainty','Intuition','Subconscious Surfacing'],w:'Allow uncertainty to speak without demanding answers.',o:'Fear changes when it is observed.',u:{t:'Uncertainty · Intuition · Subconscious Surfacing',x:'The Dark Forest appears when clarity dissolves and the psyche turns inward. Within the Wunderland landscape, this unfolds like entering a dark forest: unfamiliar sounds, shifting shadows, a path that reveals itself only a few steps at a time. In shadow work, The Dark Forest often arises during anxiety, vivid dreams, emotional sensitivity, or resurfacing memories not yet ready to be named.'},r:{t:'Fear Amplification · Disorientation · Avoidance of the Unseen',x:'Reversed, The Dark Forest suggests fear has overtaken intuition. Every sound startles. The instinct becomes escape rather than navigation. You do not need to solve the night — only to remain embodied and find what steadies you.'},l:{p:['Emotions and impressions intensify','Reality feels slippery or altered','Old material may surface without context'],pn:'The Dark Forest changes how things appear, not necessarily what they are.',a:['Certainty is clung to aggressively','Ambiguity is framed as danger','Rational explanations are forced prematurely'],an:'Avoidance may reflect times when confusion was unsafe.',c:['Intuition vs. projection','Sensitivity vs. overwhelm','Symbolism vs. reality'],cn:'The Dark Forest does not guarantee truth.'},j:{g:['What feels unclear or ambiguous right now?','Where does my perception feel least steady?'],q:['How do I usually respond when things don\'t make sense?','What helps me stay grounded during uncertainty?'],d:['When did confusion become frightening for me?','What helped me navigate distorted situations?']},i:['Notice moments when clarity is not required','Experiment with delaying conclusions','If anxiety rises, orient to something concrete and present']},
+  {n:'Clear Day',s:'Clarity, Exposure, and Aliveness',k:['Clarity','Aliveness','Ease','Authentic Expression'],w:'Allow yourself to be seen without bracing.',o:'Nothing needs to be hidden now.',u:{t:'Clarity · Aliveness · Ease · Authentic Expression',x:'Clear Day appears when inner tension releases and energy flows freely again. After The Dark Forest, this moment feels like stepping into open daylight. In the Wunderland landscape, the world becomes visible again: colours brighten, proportions stabilise, and the body remembers how to play. In shadow work, Clear Day signals nervous-system relief. You are no longer scanning for threat.'},r:{t:'Overexposure · Performative Joy · Burnout',x:'Reversed, Clear Day suggests visibility without safety. Light becomes harsh rather than warming. You may feel pressure to be happy, productive, or "okay" before your system is ready. Joy cannot be demanded. It returns when rest, honesty, and pacing are allowed back into the system.'},l:{p:['Awareness increases without effort','Details become easier to perceive','Energy may rise — or simply become available'],pn:'Clear Day reveals what is, not what should be.',a:['Light feels intrusive or unsafe','Exposure triggers self-consciousness or retreat','Clarity is postponed to avoid responsibility'],an:'Avoidance may reflect times when being seen had consequences.',c:['Clarity vs. certainty','Exposure vs. vulnerability','Ease vs. denial'],cn:'Clear Day does not require positivity.'},j:{g:['What feels clearer to me right now?','Where do I notice more energy or aliveness?'],q:['How do I usually respond when things become visible?','What helps me tolerate being seen — by myself or others?'],d:['When did visibility feel unsafe?','What did I learn about being exposed or known?']},i:['Notice moments of clarity without amplifying them','Experiment with letting visibility be brief','If exposure feels intense, orient to something grounding']},
+  {n:'The Call',s:'Summoning, Response, and Readiness',k:['Awakening','Reckoning','Integration','Self-Recognition'],w:'Allow yourself to be seen without defense.',o:'Recognition completes what awareness began.',u:{t:'Awakening · Reckoning · Integration · Self-Recognition',x:'The Call appears when something within you is ready to be acknowledged — out loud, fully, and without retreat. In the Queen\'s Court, truth is not uncovered gently. It is summoned. In shadow work, this mirrors the moment when denial breaks and recognition arrives: this happened, this matters, this is mine to carry forward. When the truth is spoken, scattered parts can finally gather.'},r:{t:'Avoidance · Self-Judgment · Fear of Exposure',x:'Reversed, The Call suggests resistance to being seen. The inner witness becomes the judge, jury, and executioner — condemning without understanding, demanding confession without safety. The work here is compassion. Reckoning does not require cruelty.'},l:{p:['Something asks for attention','Readiness is questioned, not assumed','A response feels possible, not mandatory'],pn:'The Call does not demand compliance.',a:['Signals are dismissed or minimised','Readiness is postponed indefinitely','Fear of consequence overrides curiosity'],an:'Avoidance may reflect times when responding carried cost.',c:['Call vs. command','Readiness vs. worthiness','Response vs. obligation'],cn:'The Call invites — it does not force.'},j:{g:['What currently asks for my attention?','Where do I notice a quiet pull or signal?'],q:['How do I usually respond when something calls me?','What helps me discern whether I\'m ready?'],d:['When did responding feel dangerous or costly?','What happened when I ignored a call in the past?']},i:['Notice one call without responding to it','Experiment with allowing readiness to be unclear','If urgency appears, pause and orient to the present']},
+  {n:'The Return',s:'Completion, Wholeness, and Already-Here',k:['Wholeness','Completion','Integration','Belonging'],w:'Recognise yourself as part of the whole.',o:'What was witnessed becomes embodied.',u:{t:'Wholeness · Completion · Integration · Belonging',x:'The Return appears when a cycle has fully completed — not through perfection, but through lived experience. Here, the landscape settles. What once felt disorienting now feels navigable. The strange rules no longer threaten — you understand how to move within them. In shadow work, The Return reflects a nervous system that has moved through activation and found coherence. You are on the board, grounded, oriented, and allowed to take up space.'},r:{t:'Incomplete Integration · Fragmentation · Difficulty Returning',x:'Reversed, The Return suggests a hesitation to fully return. The journey may be over, but something still feels unsettled. Doors appear — but you pause before stepping through. The work here is patience. Wholeness does not arrive all at once — it arrives through repeated moments of landing.'},l:{p:['Familiarity replaces novelty','What was sought is recognised rather than obtained','The ordinary feels sufficient'],pn:'The return reveals what was already carrying you.',a:['Completion feels suspicious or premature','There is pressure to "make something of" the journey','Rest feels undeserved'],an:'Avoidance may reflect times when stopping meant loss.',c:['Completion vs. stagnation','Wholeness vs. perfection','Return vs. regression'],cn:'The Return does not erase the journey — it reframes it.'},j:{g:['What feels familiar to me now in a new way?','Where do I notice quiet sufficiency?'],q:['How do I usually respond when something ends?','What does "enough" feel like in my body?'],d:['When did rest or completion feel unsafe?','What happens when I stop seeking?']},i:['Notice moments of enough-ness without extending them','Experiment with stopping without replacing','If urgency to continue arises, name it gently']}
+];
+
+let S={pathIndex:0,isFlipped:false,pathRev:false,pullRev:false,selPrompt:null,showInteg:false,allowRev:false,curCard:null,completed:[],journals:{},integNotes:{}};
+
+async function save(){try{await window.storage.set('ws4',JSON.stringify({pathIndex:S.pathIndex,completed:S.completed,journals:S.journals,integNotes:S.integNotes}));}catch(e){}}
+async function load(){try{const r=await window.storage.get('ws4');if(r&&r.value){const d=JSON.parse(r.value);S.pathIndex=d.pathIndex||0;S.completed=d.completed||[];S.journals=d.journals||{};S.integNotes=d.integNotes||{};}}catch(e){}}
+
+const isTouch=window.matchMedia('(hover:none)').matches;
+const curEl=document.getElementById('cur');
+const gc=['#f0cc78','#d4aa50','#fff8e8','#fff','#ffd700','#ffe5a0'];
+let lx=0,ly=0,sc=0;
+if(!isTouch){document.addEventListener('mousemove',e=>{curEl.style.left=e.clientX+'px';curEl.style.top=e.clientY+'px';const dx=e.clientX-lx,dy=e.clientY-ly;if(Math.sqrt(dx*dx+dy*dy)>7){mkSp(e.clientX,e.clientY);lx=e.clientX;ly=e.clientY;}});}
+function mkSp(x,y){if(sc>50)return;sc++;const s=document.createElement('div');s.className='sp';const sz=3+Math.random()*7,a=Math.random()*360,d=15+Math.random()*45;s.style.cssText=`width:${sz}px;height:${sz}px;left:${x}px;top:${y}px;background:${gc[Math.floor(Math.random()*gc.length)]};--dx:${Math.cos(a*Math.PI/180)*d}px;--dy:${Math.sin(a*Math.PI/180)*d}px;box-shadow:0 0 ${sz}px ${gc[0]};transform:translate(-50%,-50%)`;document.body.appendChild(s);setTimeout(()=>{s.remove();sc--;},900);}
+
+function toast(m){const t=document.getElementById('tst');t.textContent=m;t.classList.add('sh');setTimeout(()=>t.classList.remove('sh'),2800);}
+window.addEventListener('scroll',()=>{const b=document.getElementById('rtp');if(b)b.classList.toggle('vs',window.scrollY>300);});
+
+function showScreen(n){
+  document.getElementById('sh').style.display=n==='home'?'block':'none';
+  document.getElementById('sp').style.display=n==='path'?'block':'none';
+  document.getElementById('sd').style.display=n==='pull'?'block':'none';
+  document.querySelectorAll('.nt').forEach((t,i)=>t.classList.toggle('on',['home','path','pull'][i]===n));
+  if(n==='home')renderHome();
+  if(n==='path'){S.isFlipped=false;S.selPrompt=null;S.showInteg=false;renderPath();}
+  if(n==='pull')renderPull();
+}
+
+function lanternSVG(pct){
+  const done=pct>=100,fl=Math.max(0.04,pct/100);
+  const gR=Math.round(6+fl*36)+(done?20:0);
+  const fH=Math.round(10+fl*28),fW=Math.round(7+fl*12);
+  const gOp=(0.12+fl*0.6).toFixed(2);
+  const wH=done?'#1ab8c8':fl<0.2?'#3a2008':fl<0.45?'#a05c10':fl<0.7?'#c88020':fl<0.9?'#e0a030':'#f5c858';
+  const iH=done?'#40e8f8':fl<0.2?'#2a1406':fl<0.45?'#c07018':fl<0.7?'#e09828':'#f8d060';
+  const gC=done?'rgba(26,184,200,0.85)':fl<0.2?'rgba(80,40,8,.4)':fl<0.5?'rgba(180,100,20,.5)':fl<0.8?'rgba(220,150,30,.6)':'rgba(245,200,80,.7)';
+  const fy=Math.round(102-fH);
+  return`<svg width="120" height="210" viewBox="0 0 120 210" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 0 ${gR}px ${wH}) drop-shadow(0 0 ${Math.round(gR*1.6)}px ${gC});overflow:visible"><defs><radialGradient id="gg" cx="50%" cy="55%" r="55%"><stop offset="0%" stop-color="${iH}" stop-opacity="${gOp}"/><stop offset="60%" stop-color="${wH}" stop-opacity="${(parseFloat(gOp)*.4).toFixed(2)}"/><stop offset="100%" stop-color="#0d0906" stop-opacity=".02"/></radialGradient><radialGradient id="tg" cx="50%" cy="40%" r="50%"><stop offset="0%" stop-color="#40e0f0" stop-opacity="${(fl*.18).toFixed(2)}"/><stop offset="100%" stop-color="#40e0f0" stop-opacity="0"/></radialGradient><radialGradient id="fg" cx="50%" cy="85%" r="55%"><stop offset="0%" stop-color="#fffde8"/><stop offset="30%" stop-color="#f8e060"/><stop offset="65%" stop-color="${wH}"/><stop offset="100%" stop-color="${wH}" stop-opacity="0"/></radialGradient><radialGradient id="fi" cx="50%" cy="80%" r="40%"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#ffe880" stop-opacity="0"/></radialGradient><filter id="b4"><feGaussianBlur stdDeviation="4"/></filter></defs>
+  <ellipse cx="60" cy="6" rx="7" ry="4" fill="none" stroke="#8a6828" stroke-width="2"/>
+  <line x1="60" y1="10" x2="60" y2="22" stroke="#7a5820" stroke-width="1.5" stroke-dasharray="3,2"/>
+  <path d="M44 22 L48 14 L52 20 L56 12 L60 20 L64 12 L68 20 L72 14 L76 22 Z" fill="#8a6020" stroke="#b08830" stroke-width=".8"/>
+  <rect x="42" y="21" width="36" height="6" rx="2" fill="#9a7028" stroke="#c09838" stroke-width=".8"/>
+  <rect x="38" y="27" width="44" height="5" rx="2" fill="#7a5820" stroke="#a07830" stroke-width=".5"/>
+  <ellipse cx="49" cy="29.5" rx="3" ry="2" fill="none" stroke="#c09838" stroke-width=".8"/>
+  <ellipse cx="60" cy="29.5" rx="3" ry="2" fill="none" stroke="#c09838" stroke-width=".8"/>
+  <ellipse cx="71" cy="29.5" rx="3" ry="2" fill="none" stroke="#c09838" stroke-width=".8"/>
+  <path d="M36 32 Q28 32 26 50 L24 110 Q24 122 36 124 L84 124 Q96 122 96 110 L94 50 Q92 32 84 32 Z" fill="#1a1208" stroke="#7a5820" stroke-width="1.5"/>
+  <path d="M37 33 Q29 33 27 50 L25 109 Q25 121 37 123 L83 123 Q95 121 95 109 L93 50 Q91 33 83 33 Z" fill="url(#gg)"/>
+  <path d="M37 33 Q29 33 27 50 L25 109 Q25 121 37 123 L83 123 Q95 121 95 109 L93 50 Q91 33 83 33 Z" fill="url(#tg)"/>
+  <line x1="36" y1="32" x2="34" y2="124" stroke="#8a6020" stroke-width="2"/>
+  <line x1="84" y1="32" x2="86" y2="124" stroke="#8a6020" stroke-width="2"/>
+  <path d="M26 78 L94 78" stroke="#7a5820" stroke-width="1.2"/>
+  <ellipse cx="60" cy="78" rx="5" ry="3" fill="#1a1208" stroke="#9a7828" stroke-width="1"/>
+  <ellipse cx="43" cy="78" rx="3" ry="2" fill="#1a1208" stroke="#8a6820" stroke-width=".8"/>
+  <ellipse cx="77" cy="78" rx="3" ry="2" fill="#1a1208" stroke="#8a6820" stroke-width=".8"/>
+  <circle cx="36" cy="45" r="3" fill="#9a7828" stroke="#c09838" stroke-width=".5"/>
+  <circle cx="84" cy="45" r="3" fill="#9a7828" stroke="#c09838" stroke-width=".5"/>
+  <circle cx="36" cy="110" r="3" fill="#9a7828" stroke="#c09838" stroke-width=".5"/>
+  <circle cx="84" cy="110" r="3" fill="#9a7828" stroke="#c09838" stroke-width=".5"/>
+  <ellipse cx="60" cy="${fy+fH/2}" rx="${Math.round(fW*1.8)}" ry="${Math.round(fH*1.4)}" fill="${iH}" fill-opacity="${(fl*.28).toFixed(2)}" filter="url(#b4)"/>
+  <ellipse cx="60" cy="${fy}" rx="${fW/2}" ry="${fH/2}" fill="url(#fg)" opacity="${(0.5+fl*0.5).toFixed(2)}"/>
+  <ellipse cx="60" cy="${fy+2}" rx="${Math.round(fW/3.5)}" ry="${Math.round(fH/3)}" fill="url(#fi)" opacity="${(fl*.95).toFixed(2)}"/>
+  <rect x="57" y="${fy+fH/2-2}" width="6" height="6" rx="1" fill="#2a1a06"/>
+  <ellipse cx="60" cy="${fy+fH/2+4}" rx="8" ry="3" fill="#1e1408"/>
+  <rect x="24" y="124" width="72" height="7" rx="2" fill="#8a6020" stroke="#b08830" stroke-width=".8"/>
+  <path d="M26 131 Q36 136 60 137 Q84 136 94 131" fill="none" stroke="#9a7028" stroke-width="1"/>
+  <rect x="28" y="130" width="64" height="5" rx="2" fill="#7a5420" stroke="#a07028" stroke-width=".5"/>
+  <ellipse cx="60" cy="138" rx="10" ry="5" fill="#8a6020" stroke="#b08830" stroke-width=".8"/>
+  <ellipse cx="60" cy="140" rx="6" ry="3" fill="#6a4818" stroke="#9a7828" stroke-width=".5"/>
+  <path d="M26 68 Q10 68 8 88 Q6 108 26 108" fill="none" stroke="#8a6020" stroke-width="3" stroke-linecap="round"/>
+  <path d="M26 68 Q10 68 8 88 Q6 108 26 108" fill="none" stroke="#c09838" stroke-width="1" stroke-linecap="round"/>
+  <circle cx="17" cy="88" r="3" fill="#9a7828" stroke="#c09838" stroke-width=".8"/>
+  ${fl>0.5?`<line x1="60" y1="${fy-4}" x2="60" y2="28" stroke="${iH}" stroke-width="1" stroke-opacity="${((fl-0.5)*.6).toFixed(2)}"/><line x1="60" y1="${fy}" x2="28" y2="${fy-10}" stroke="${iH}" stroke-width=".8" stroke-opacity="${((fl-0.5)*.4).toFixed(2)}"/><line x1="60" y1="${fy}" x2="92" y2="${fy-10}" stroke="${iH}" stroke-width=".8" stroke-opacity="${((fl-0.5)*.4).toFixed(2)}"/>`:''}
+  ${fl>0.7||done?`<path d="M36 32 Q28 32 26 50 L24 110 Q24 122 36 124 L84 124 Q96 122 96 110 L94 50 Q92 32 84 32 Z" fill="none" stroke="${done?'#40e8f8':'#40e0f0'}" stroke-width="${done?'2.5':'1.5'}" stroke-opacity="${done?'.9':((fl-0.7)*.8).toFixed(2)}"/>`:''}
+  ${done?`<path d="M37 33 Q29 33 27 50 L25 109 Q25 121 37 123 L83 123 Q95 121 95 109 L93 50 Q91 33 83 33 Z" fill="rgba(26,184,200,.18)"/><ellipse cx="60" cy="78" rx="28" ry="36" fill="rgba(64,232,248,.12)" filter="url(#b4)"/>`:''}
+  </svg>`;
+}
+
+function renderHome(){
+  document.getElementById('sh').innerHTML=`<div class="hsc"><div class="od" style="font-size:20px;opacity:.9">✦ ✧ ✦</div><p class="htg" style="margin-top:14px"><em>Wunderland Shadows</em> moves through the quiet spaces beneath certainty — shadow work and self-witnessing, offered through the strange mirror of Wunderland.</p><div class="od">· · ✦ · ·</div><div class="mc" style="margin-top:24px"><div class="mci" onclick="showScreen('path')"><div class="mii">◈</div><div class="mtt">Follow the Path</div><p class="mds">Journey through all 22 arcana. Your lantern grows brighter with each card you complete.</p></div><div class="mci" onclick="showScreen('pull')"><div class="mii">◇</div><div class="mtt">Draw a Card</div><p class="mds">Pull a single card from the deck — upright or reversed — for today's quiet reflection.</p></div></div></div>`;
+}
+
+function renderPath(){
+  const idx=S.pathIndex,c=CD[idx],pct=Math.round((S.completed.length/22)*100),done=S.completed.includes(idx);
+  const jk='p'+idx,nk='n'+idx,sel=S.selPrompt,pr=S.pathRev;
+  const opts=CD.map((c,i)=>`<option value="${i}"${i===idx?' selected':''}>${NM[i]} — ${c.n}${S.completed.includes(i)?' ✦':''}</option>`).join('');
+  const complete100=pct>=100;
+
+  document.getElementById('sp').innerHTML=`<div>
+  <div class="lts">
+    ${lanternSVG(pct)}
+    <div class="ltl">Your Shadow Lantern</div>
+    <div class="ltc">${S.completed.length} of 22 completed · ${pct}%</div>
+    ${complete100?`<div style="text-align:center;max-width:440px;padding:18px 22px;background:linear-gradient(135deg,rgba(13,112,128,.25),rgba(26,184,200,.1));border:1px solid var(--tld);border-radius:6px"><div style="font-family:'Cinzel',serif;font-size:16px;color:#40e8f8;letter-spacing:3px;margin-bottom:8px">✦ Path Complete ✦</div><p style="font-size:15px;color:var(--tc);line-height:1.8;font-style:italic">Congratulations for brightening your path.<br>You have carried the lantern through all 22 arcana.<br>The light you found was always yours.</p><div style="margin-top:12px;font-size:12px;color:var(--tld);letter-spacing:3px">✧ · ✧ · ✧</div></div>`:`<p style="font-size:14px;color:var(--td);font-style:italic;text-align:center;max-width:360px">The lantern grows brighter with each card you complete.</p>`}
+    <div class="lta">
+      <div class="csl"><label>Choose a card to work with</label><select class="cs" onchange="selCard(this.value)">${opts}</select></div>
+      <button class="rsb" onclick="confirmReset()">↺ Reset Path Progress</button>
+    </div>
+  </div>
+  <div class="ca" id="ca">
+    <div style="position:relative">
+      ${done?'<div class="ob">✦ Completed ✦</div>':''}
+      <div class="cco" onclick="flipP()">
+        <div class="cci${S.isFlipped?(pr?' rv':' fl'):''}">
+          <div class="cb"><img src="${BACK}" alt="back" onerror="bFB(this)"><div class="ifb" style="display:none"><span>Wunderland Shadows</span></div></div>
+          <div class="cf"><img src="${iSrc(idx)}" alt="${c.n}" onerror="iFB(this,${idx})"><div class="ifb" style="display:none"><span>${NM[idx]}<br>${c.n}</span></div></div>
+        </div>
+        ${!S.isFlipped?'<div class="fh">✦ Tap to reveal your card ✦</div>':''}
+      </div>
+    </div>
+    <div class="ctl">
+      <button class="btn sm mu" onclick="navC(-1)">◂ Prev</button>
+      <button class="btn sm pr" onclick="flipP()">${S.isFlipped?'↺ Reflip':'✦ Reveal'}</button>
+      <button class="btn sm mu" onclick="navC(1)">Next ▸</button>
+    </div>
+    ${S.isFlipped?cInfo(idx,c,sel,jk,nk,done,false,pr):''}
+  </div></div>`;
+}
+
+function cInfo(idx,c,sel,jk,nk,done,isPull,isRev){
+  const interp=isRev?c.r:c.u;
+  const prompts=sel?c.j[sel]:null;
+  return`<div class="ci">
+  <div class="cih"><div class="cn">${NM[idx]} — Major Arcana${isRev?' · Reversed':''}</div><div class="cnm">${c.n}</div><div class="cst">${c.s}</div><div class="kws">${c.k.map(k=>`<span class="kw">${k}</span>`).join('')}</div></div>
+  <div class="cib">
+    <span class="sl2">Orientation</span><div class="wp" style="font-size:16px;color:var(--tm);padding:11px 16px;margin-bottom:16px">${c.o}</div>
+    <span class="sl2">Witness Phrase</span><div class="wp">${c.w}</div>
+    <span class="sl2">${isRev?'Reversed':'Upright'} — ${interp.t}</span>
+    <p class="it">${interp.x}</p>
+    ${!isPull?`<div class="od">· · ✦ · ·</div>
+    <span class="sl2">Expanded Reflection Lenses</span>
+    <p style="font-size:14px;color:var(--td);font-style:italic;margin-bottom:14px">These reflections describe possible experiences — not instructions.</p>
+    <div class="lb"><div class="lt">When this state is present</div><div class="lbd"><ul>${c.l.p.map(x=>`<li>${x}</li>`).join('')}</ul></div><p class="ln">${c.l.pn}</p></div>
+    <div class="lb"><div class="lt">When avoided or unavailable</div><div class="lbd"><ul>${c.l.a.map(x=>`<li>${x}</li>`).join('')}</ul></div><p class="ln">${c.l.an}</p></div>
+    <div class="lb"><div class="lt">Common confusions</div><div class="lbd"><ul>${c.l.c.map(x=>`<li>${x}</li>`).join('')}</ul></div><p class="ln">${c.l.cn}</p></div>`:''}
+    <div class="od">· · ✦ · ·</div>
+    <span class="sl2">Choose Your Journaling Depth</span>
+    <div class="ps">
+      <button class="pb${sel==='g'?' on':''}" onclick="setSel('g','${isPull?'d':'p'}')">🕯 Gentle</button>
+      <button class="pb${sel==='q'?' on':''}" onclick="setSel('q','${isPull?'d':'p'}')">⟳ Curious</button>
+      <button class="pb${sel==='d'?' on':''}" onclick="setSel('d','${isPull?'d':'p'}')">⬧ Deep</button>
+    </div>
+    ${prompts?`<div class="pd"><ul>${prompts.map(p=>`<li>${p}</li>`).join('')}</ul></div><textarea class="ja" placeholder="Write your reflections here… there is no right way." onchange="svJ('${jk}',this.value,false)">${S.journals[jk]||''}</textarea>`:''}
+    <div class="igs">
+      <button class="itb${S.showInteg?' op':''}" onclick="${isPull?'tigP':'tig'}()"><span class="ar">▸</span> Integration Experiments</button>
+      ${S.showInteg?`<p style="font-size:14px;color:var(--td);font-style:italic;margin-bottom:12px">These are experiments, not tasks.</p><div class="ibd"><ul>${c.i.map(x=>`<li>${x}</li>`).join('')}</ul></div><textarea class="in" placeholder="Notes from your experiments…" onchange="svJ('${nk}',this.value,true)">${S.integNotes[nk]||''}</textarea>`:''}
+    </div>
+    <div class="ar2">
+      <button class="btn sm" onclick="printC(${idx},${isRev})">⊕ Save to PDF</button>
+      ${!isPull&&!done?`<button class="btn sm pr" onclick="markDone(${idx})">Mark Complete ✦</button>`:''}
+      ${!isPull&&done?`<span style="font-size:14px;color:var(--gd);font-style:italic;align-self:center">✦ This card is complete</span>`:''}
+    </div>
+  </div></div>`;
+}
+
+function selCard(i){S.pathIndex=parseInt(i);S.isFlipped=false;S.selPrompt=null;S.showInteg=false;renderPath();setTimeout(()=>{const el=document.getElementById('ca');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});},80);}
+function navC(d){const n=S.pathIndex+d;if(n>=0&&n<=21)selCard(n);}
+function flipP(){S.isFlipped=!S.isFlipped;renderPath();}
+function tig(){S.showInteg=!S.showInteg;renderPath();}
+function tigP(){S.showInteg=!S.showInteg;renderPull();}
+function setSel(p,mode){S.selPrompt=S.selPrompt===p?null:p;if(mode==='p')renderPath();else renderPull();}
+function markDone(i){if(!S.completed.includes(i))S.completed.push(i);save();toast('✦ Card complete — well done.');renderPath();}
+function svJ(k,v,isN){if(isN)S.integNotes[k]=v;else S.journals[k]=v;save();}
+function confirmReset(){if(confirm('This will clear all path progress and completed cards.\n\nYour journal entries will be kept.\n\nAre you sure you want to start the path again?')){S.completed=[];S.pathIndex=0;S.isFlipped=false;S.selPrompt=null;S.showInteg=false;save();toast('✦ The path has been reset. The lantern awaits.');renderPath();}}
+
+function renderPull(){
+  const c=S.curCard!==null?CD[S.curCard]:null,sel=S.selPrompt,pr=S.pullRev;
+  const jk=S.curCard!==null?'pull'+S.curCard+(pr?'r':'u'):null,nk=jk?'pn'+jk:null;
+  document.getElementById('sd').innerHTML=`<div class="ca">
+  <div class="ctl" style="justify-content:space-between;width:100%;max-width:420px">
+    <div class="tgr"><label class="tg"><input type="checkbox"${S.allowRev?' checked':''} onchange="S.allowRev=this.checked"><span class="sl"></span></label><span>Allow Reversed</span></div>
+    <button class="btn sm pr" onclick="drawCard()">✦ Draw a Card</button>
+  </div>
+  ${c===null?`<div class="es"><div class="bi">◇</div><p>When you are ready,<br>draw a card from the deck.</p></div>`:`
+  <div style="position:relative">
+    <div class="ob">${pr?'Reversed':'Upright'}</div>
+    <div class="cco" onclick="flipD()">
+      <div class="cci${S.isFlipped?(pr?' rv':' fl'):''}">
+        <div class="cb"><img src="${BACK}" alt="back" onerror="bFB(this)"></div>
+        <div class="cf"><img src="${iSrc(S.curCard)}" alt="${c.n}" onerror="iFB(this,${S.curCard})"><div class="ifb" style="display:none"><span>${NM[S.curCard]}<br>${c.n}</span></div></div>
+      </div>
+      ${!S.isFlipped?'<div class="fh">✦ Tap to reveal your card ✦</div>':''}
+    </div>
+  </div>
+  <div class="ctl"><button class="btn sm mu" onclick="drawCard()">⟳ Draw Again</button></div>
+  ${S.isFlipped?cInfo(S.curCard,c,sel,jk,nk,false,true,pr):''}`}
+  </div>`;
+}
+
+function drawCard(){S.curCard=Math.floor(Math.random()*22);S.pullRev=S.allowRev&&Math.random()>.5;S.isFlipped=false;S.selPrompt=null;S.showInteg=false;renderPull();}
+function flipD(){S.isFlipped=!S.isFlipped;renderPull();}
+
+function printC(idx,isRev){
+  const c=CD[idx],jk='p'+idx,nk='n'+idx,sel=S.selPrompt,pr=sel?c.j[sel]:null,interp=isRev?c.r:c.u;
+  const w=window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><title>${c.n} — Wunderland Shadows</title><link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400&family=Cormorant+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet"><style>body{font-family:'Cormorant Garamond',Georgia,serif;max-width:680px;margin:40px auto;color:#1a1008;line-height:1.8;font-size:16px}h1{font-family:'Cinzel',serif;font-size:28px;margin-bottom:4px}h2{font-size:16px;color:#6a5030;font-weight:400;margin-bottom:20px;font-style:italic}h3{font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#8a6830;margin:20px 0 8px}.w{font-style:italic;border-left:3px solid #d4aa50;padding:12px 16px;margin:14px 0;background:#faf6ee;font-size:17px}.l{background:#f5f0e8;border-left:2px solid #c9a84c;padding:10px 14px;margin:6px 0}ul{padding-left:18px}.box{border:1px solid #c9a84c;border-radius:4px;padding:14px;margin-top:6px;min-height:100px;white-space:pre-wrap;background:#fafaf5}.ft{margin-top:40px;font-size:11px;color:#9a8060;border-top:1px solid #e8dfc8;padding-top:12px}</style></head><body>
+  <div style="font-size:10px;letter-spacing:3px;color:#9a8060;text-transform:uppercase;margin-bottom:5px">${NM[idx]} · Major Arcana · ${isRev?'Reversed':'Upright'}</div>
+  <h1>${c.n}</h1><h2>${c.s}</h2>
+  <h3>Orientation</h3><p style="font-style:italic">${c.o}</p>
+  <h3>Witness Phrase</h3><div class="w">${c.w}</div>
+  <h3>${isRev?'Reversed':'Upright'} — ${interp.t}</h3><p>${interp.x}</p>
+  <h3>When Present</h3><div class="l"><ul>${c.l.p.map(x=>`<li>${x}</li>`).join('')}</ul><p style="font-style:italic;margin-top:6px;color:#8a6830">${c.l.pn}</p></div>
+  <h3>When Avoided</h3><div class="l"><ul>${c.l.a.map(x=>`<li>${x}</li>`).join('')}</ul><p style="font-style:italic;margin-top:6px;color:#8a6830">${c.l.an}</p></div>
+  <h3>Common Confusions</h3><div class="l"><ul>${c.l.c.map(x=>`<li>${x}</li>`).join('')}</ul><p style="font-style:italic;margin-top:6px;color:#8a6830">${c.l.cn}</p></div>
+  ${pr?`<h3>Journaling Prompts — ${sel}</h3><ul>${pr.map(p=>`<li>${p}</li>`).join('')}</ul>`:''}
+  <h3>Journal Entry</h3><div class="box">${S.journals[jk]||'(no entry)'}</div>
+  <h3>Integration</h3><ul>${c.i.map(x=>`<li>${x}</li>`).join('')}</ul>
+  <h3>Integration Notes</h3><div class="box">${S.integNotes[nk]||'(no notes)'}</div>
+  <div class="ft">Wunderland Shadows · ${c.n} · ${new Date().toLocaleDateString()}</div>
+  </body></html>`);
+  w.document.close();w.focus();setTimeout(()=>w.print(),500);
+}
+
+async function init(){await load();renderHome();}
+init();
+</script>
+</body>
+</html>
