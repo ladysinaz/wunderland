@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -138,6 +139,18 @@ select.cs:focus{border-color:var(--tld)}
 #rtp{position:fixed;bottom:26px;right:26px;width:42px;height:42px;border-radius:50%;background:var(--cd);border:1px solid var(--tld);color:var(--tl);font-size:17px;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:500;transition:all .3s;box-shadow:0 0 10px var(--tlg)}
 #rtp:hover{background:rgba(26,184,200,.15);border-color:var(--tl)}
 #rtp.vs{display:flex}
+.modal-overlay{position:fixed;inset:0;background:rgba(10,6,2,.85);z-index:800;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal{background:var(--sf);border:1px solid var(--gold);border-radius:6px;padding:32px 28px;max-width:420px;width:100%;text-align:center}
+.modal h2{font-family:'Cinzel',serif;font-size:16px;color:var(--gold);letter-spacing:3px;margin-bottom:16px}
+.modal p{font-size:16px;color:var(--tm);line-height:1.8;margin-bottom:24px}
+.modal-btns{display:flex;flex-direction:column;gap:10px}
+.modal-btns button{padding:13px 20px;border-radius:2px;cursor:pointer;font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;transition:all .3s;border:1px solid}
+.mbtn-keep{background:rgba(212,170,80,.18);border-color:var(--gold);color:var(--gold)}
+.mbtn-keep:hover{background:rgba(212,170,80,.3)}
+.mbtn-clear{background:transparent;border-color:var(--tld);color:var(--tl)}
+.mbtn-clear:hover{background:rgba(26,184,200,.1)}
+.mbtn-cancel{background:transparent;border-color:var(--br);color:var(--tm)}
+.mbtn-cancel:hover{border-color:var(--tm);color:var(--tc)}
 @media(max-width:640px){
   body{font-size:16px}
   .mc{grid-template-columns:1fr}
@@ -403,10 +416,23 @@ function setSel(p,mode){S.selPrompt=S.selPrompt===p?null:p;if(mode==='p')renderP
 function markDone(i){if(!S.completed.includes(i))S.completed.push(i);save();toast('✦ Card complete — well done.');renderPath();}
 function svJ(k,v,isN){if(isN)S.integNotes[k]=v;else S.journals[k]=v;save();}
 function confirmReset(){
-  const keepJ=confirm('This will clear all path progress and completed cards.\n\nClick OK to KEEP your journal entries.\nClick Cancel to DELETE all journal entries too.\n\nAre you sure you want to reset?');
-  if(keepJ===null)return;
+  const overlay=document.createElement('div');
+  overlay.className='modal-overlay';
+  overlay.innerHTML=`<div class="modal">
+    <h2>↺ Reset Path</h2>
+    <p>This will clear your progress and completed cards.<br>What would you like to do with your journal entries?</p>
+    <div class="modal-btns">
+      <button class="mbtn-keep" onclick="doReset(true)">✦ Keep Journals &amp; Reset Path</button>
+      <button class="mbtn-clear" onclick="doReset(false)">Clear Everything &amp; Start Fresh</button>
+      <button class="mbtn-cancel" onclick="this.closest('.modal-overlay').remove()">Cancel — Go Back</button>
+    </div>
+  </div>`;
+  document.body.appendChild(overlay);
+}
+function doReset(keepJ){
+  document.querySelector('.modal-overlay')?.remove();
   S.completed=[];S.pathIndex=0;S.isFlipped=false;S.selPrompt=null;S.showInteg=false;
-  if(keepJ===false){S.journals={};S.integNotes={};}
+  if(!keepJ){S.journals={};S.integNotes={};}
   save();
   toast(keepJ?'✦ Path reset. Journal entries kept.':'✦ Path and journals cleared. A fresh beginning.');
   renderPath();
